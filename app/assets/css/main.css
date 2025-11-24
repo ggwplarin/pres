@@ -14,9 +14,17 @@ body {
 
   /* Colors */
   --clr-background: lch(95% 3 var(--base-hue));
-  --clr-primary: lch(80% 50 var(--base-hue));
-  --clr-primary-container: lch(30% 50 var(--base-hue));
-  --clr-surface-container: lch(10% 10 var(--base-hue));
+
+  --clr-primary: lch(50% 60 var(--base-hue));
+  --clr-primary-container: lch(80% 60 var(--base-hue));
+
+  --clr-secondary: lch(50% 40 calc(var(--base-hue) + 90deg));
+  --clr-secondary-container: lch(80% 40 calc(var(--base-hue) + 90deg));
+
+  --clr-tertiary: lch(50% 60 calc(var(--base-hue) - 90deg));
+  --clr-tertiary-container: lch(80% 60 calc(var(--base-hue) - 90deg));
+
+  --clr-surface-container: lch(90% 4 var(--base-hue));
   --clr-on-surface: lch(20% 8 var(--base-hue));
   --clr-on-surface-variant: lch(40% 12 var(--base-hue));
   --clr-outline: lch(50% 5 var(--base-hue));
