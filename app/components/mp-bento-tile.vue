@@ -94,7 +94,7 @@ const style = computed(() => ({
   gap: var(--sp-m);
   overflow: hidden;
   :first-child:is(h1, h2, h3, h4, h5, h6) {
-    margin-top: 0;
+    margin-block: 0;
     color: var(--clr-on-surface-variant);
   }
   & picture {
@@ -105,10 +105,13 @@ const style = computed(() => ({
 @container (aspect-ratio > 1) {
   .bento-tile {
     /* Landscape layout */
-    /* grid-template-areas: "title image content"; */
-    grid-template-areas: "title image" "content image";
-    grid-template-columns: auto minmax(50%, 1fr);
+    grid-template-areas: "title" "content";
     grid-template-rows: auto 1fr;
+
+    &:has(> .bento-tile-image > *) {
+      grid-template-areas: "title image" "content image";
+      grid-template-columns: auto minmax(50%, 1fr);
+    }
   }
 }
 
