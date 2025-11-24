@@ -120,4 +120,8 @@ const tasks = ref([
 ]);
 </script>
 
-<style scoped></style>
+<style scoped>
+  .mp-gantt-container {
+    margin: auto;
+  }
+</style>
