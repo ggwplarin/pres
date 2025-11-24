@@ -1,68 +1,54 @@
 <template>
   <mp-slide>
     <template #header>
-      <h1>Создание доски</h1>
+      <h1>Авторизация и защита маршрутов</h1>
     </template>
 
     <div class="code-container">
       <div>
-        <h2>Логика создания новой доски</h2>
+        <h2>Пример работы auth middleware</h2>
         <p>
-          API endpoint для создания новой Kanban доски с валидацией данных,
-          проверкой авторизации и автоматическим добавлением создателя как
-          владельца.
+          Middleware проверяет авторизацию пользователя и защищает приватные
+          маршруты.
         </p>
         <p>
-          Использует Zod для валидации входных данных и Prisma для работы с БД.
-          Поддерживает приватность доски и описание.
+          Если пользователь не авторизован и пытается попасть на приватный
+          маршрут, он будет перенаправлен на страницу авторизации.
         </p>
         <p>
-          При успешном создании доски владелец автоматически добавляется в
-          список участников с ролью "owner".
+          Если пользователь авторизован и пытается попасть на страницу
+          авторизации, он будет перенаправлен на главную страницу.
         </p>
       </div>
       <mp-codeblock
-        :code="createBoardCode"
+        :code="authCode"
         language="typescript"
-        filename="server/api/board/index.post.ts"
+        filename="layers/auth/middleware/auth.global.ts"
         show-line-numbers
-        :highlight-lines="[2, 3, 8, 16]"
+        :highlight-lines="[5, 10, 15]"
       />
     </div>
   </mp-slide>
 </template>
 
 <script setup lang="ts">
-const createBoardCode = `
-export default defineEventHandler(async (event) => {
-  const prisma = await usePrisma();
-  const user = await getUserFromSession(event);
+const authCode = `export default defineNuxtRouteMiddleware(async (to) => {
+  const userStore = useUserStore();
 
-  if (!user) return sendError(event, createError({ statusCode: 401 }));
+  // Проверка авторизации
+  if (userStore.isLoggedIn && to.path === '/login') {
+    return navigateTo('/');
+  }
 
-  const body = await readBody(event);
-  const parsed = BoardCreateSchema.safeParse(body);
+  // Защита приватных роутов
+  if (!userStore.isLoggedIn && to.meta.requiresAuth) {
+    return navigateTo('/login');
+  }
 
-  if (!parsed.success)
-    return sendError(
-      event,
-      createError({ statusCode: 422, statusMessage: "Неверные данные" })
-    );
-
-  return await prisma.board.create({
-    data: {
-      ...parsed.data,
-      owner_user_id: user.id,
-      participants: {
-        create: [
-          {
-            user_id: user.id,
-            role: "owner",
-          },
-        ],
-      },
-    },
-  });
+  // Проверка прав доступа
+  if (to.meta.role && userStore.role !== to.meta.role) {
+    return navigateTo('/403');
+  }
 });`;
 </script>
 
@@ -73,5 +59,11 @@ export default defineEventHandler(async (event) => {
   grid-template-columns: 1fr 1fr;
   gap: var(--sp-xl);
   align-items: center;
+}
+
+
+.code-container h2 {
+  margin: 0;
+  color: var(--clr-primary);
 }
 </style>

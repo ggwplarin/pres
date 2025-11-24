@@ -1,59 +1,111 @@
 <template>
   <mp-slide>
     <template #header>
-      <h1>Схема данных</h1>
+      <h1>Архитектура приложения</h1>
     </template>
 
-    <div class="code-container">
-      <div>
-        <h2>Модель Board</h2>
+    <div class="architecture-container">
+      <div class="description">
+        <h2>Модульный подход</h2>
         <p>
-          Основная модель доски Kanban с отношениями к пользователям, задачам и
-          участникам.
+          Вместо монолита используется архитектура Nuxt Layers для слабого
+          зацепления кода и модульности.
         </p>
         <p>
-          Поддерживает приватность (visibility), архивацию и каскадное удаление
-          зависимых данных.
+          Каждый слой изолирован и может быть легко расширен или заменен без
+          влияния на другие части приложения.
         </p>
-        <p>Связи с пользователями, задачами, приглашениями и чатами.</p>
       </div>
-      <mp-codeblock
-        :code="schemaCode"
-        language="prisma"
-        filename="prisma/schema.prisma"
-        show-line-numbers
-        :highlight-lines="[2, 3, 4, 7, 8]"
-      />
+
+      <mp-bento-grid :cols="12" :rows="4" gap="m">
+      <!-- <mp-bento-tile pure :row-span="1" :col-span="6"></mp-bento-tile>
+      <mp-bento-tile pure :row-span="1" :col-span="6"></mp-bento-tile> -->
+        <!-- Base App -->
+        <mp-bento-tile variant="outlined" :col-span="12" :row-span="1">
+          <template #title>
+            <h3>Base App</h3>
+          </template>
+          <p>Основное приложение Nuxt с конфигурацией и роутингом</p>
+        </mp-bento-tile>
+
+        <!-- Core Layer -->
+        <mp-bento-tile variant="outlined" :col-span="12" :row-span="1">
+          <template #title>
+            <h3>📦 layers/core</h3>
+          </template>
+          <p>
+            Базовые UI-атомы, глобальные стили и утилиты. Фундамент для всех
+            остальных слоев.
+          </p>
+        </mp-bento-tile>
+
+        <!-- Auth Layer -->
+        <mp-bento-tile variant="outlined" :col-span="6" :row-span="1">
+          <template #title>
+            <h3>🔒 layers/auth</h3>
+          </template>
+          <p>Изолированная логика регистрации и сессий. Аутентификация и авторизация.</p>
+        </mp-bento-tile>
+
+        <!-- Board Layer -->
+        <mp-bento-tile variant="outlined" :col-span="6" :row-span="1">
+          <template #title>
+            <h3>📋 layers/board</h3>
+          </template>
+          <p>Бизнес-логика Kanban-доски. Управление досками и участниками.</p>
+        </mp-bento-tile>
+
+        <!-- Tasks Layer -->
+        <mp-bento-tile variant="outlined" :col-span="12" :row-span="1">
+          <template #title>
+            <h3>✅ layers/tasks</h3>
+          </template>
+          <p>
+            Управление сущностями задач. CRUD операции, фильтрация, сортировка.
+          </p>
+        </mp-bento-tile>
+      </mp-bento-grid>
     </div>
   </mp-slide>
 </template>
 
 <script setup lang="ts">
-const schemaCode = `model Board {
-  id              String             @id @default(uuid())
-  owner_user_id   String
-  owner           User
-  title           String
-  description     String?
-  visibility      BoardVisibility
-  is_archived     Boolean            @default(false)
-  deleted_at      DateTime?
-  created_at      DateTime           @default(now())
-
-  // Relations
-  participants    BoardParticipant[]
-  tasks           Task[]
-  invitationLinks InvitationLink[]
-  Conversation    Conversation[]
-}`;
+definePageMeta({
+  layout: "default",
+});
 </script>
 
 <style scoped>
-.code-container {
+:deep(.bento-tile-content) {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+:deep(.bento-tile-content p) {
+    margin: 0;
+}
+
+.architecture-container {
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
   gap: var(--sp-xl);
-  align-items: center;
+}
+
+.description {
+  display: grid;
+  gap: var(--sp-m);
+}
+
+.description h2 {
+  margin: 0;
+  color: var(--clr-primary);
+}
+
+.description p {
+  margin: 0;
+  line-height: 1.6;
 }
 </style>
+
