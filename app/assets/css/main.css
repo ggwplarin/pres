@@ -10,23 +10,23 @@ body {
 
 :root {
   /* Base color values */
-  --base-hue: 145deg;
+  --base-hue: 255deg;
 
   /* Colors */
-  --clr-background: lch(95% 3 var(--base-hue));
+  --clr-background: lch(97% 3 var(--base-hue));
 
-  --clr-primary: lch(50% 60 var(--base-hue));
-  --clr-primary-container: lch(80% 60 var(--base-hue));
+  --clr-primary: lch(50% 30 var(--base-hue));
+  --clr-primary-container: lch(80% 30 var(--base-hue));
 
-  --clr-secondary: lch(50% 40 calc(var(--base-hue) + 90deg));
-  --clr-secondary-container: lch(80% 40 calc(var(--base-hue) + 90deg));
+  --clr-secondary: lch(50% 30 calc(var(--base-hue) + 90deg));
+  --clr-secondary-container: lch(80% 30 calc(var(--base-hue) + 90deg));
 
-  --clr-tertiary: lch(50% 60 calc(var(--base-hue) - 90deg));
-  --clr-tertiary-container: lch(80% 60 calc(var(--base-hue) - 90deg));
+  --clr-tertiary: lch(50% 30 calc(var(--base-hue) - 90deg));
+  --clr-tertiary-container: lch(80% 30 calc(var(--base-hue) - 90deg));
 
-  --clr-surface-container: lch(90% 4 var(--base-hue));
-  --clr-on-surface: lch(20% 8 var(--base-hue));
-  --clr-on-surface-variant: lch(40% 12 var(--base-hue));
+  --clr-surface-container: lch(94% 4 var(--base-hue));
+  --clr-on-surface: lch(20% 12 var(--base-hue));
+  --clr-on-surface-variant: lch(45% 16 var(--base-hue));
   --clr-outline: lch(50% 5 var(--base-hue));
 
   /* Spacing */
@@ -92,4 +92,13 @@ body {
 
 :is(h6) {
   font-size: var(--ts-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Roboto Slab", sans-serif;
 }

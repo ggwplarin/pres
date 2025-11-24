@@ -1,7 +1,7 @@
 <template>
   <mp-slide>
     <template #header>
-      <h1>Цели и задачи проекта Teamly</h1>
+      <h1>Цели и задачи проекта</h1>
     </template>
 
     <mp-bento-grid :cols="12" :rows="4" gap="m">
