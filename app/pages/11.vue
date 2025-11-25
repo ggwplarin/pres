@@ -1,54 +1,33 @@
 <template>
   <mp-slide>
     <template #header>
-      <h1>Проблематика: Хаос в управлении задачами</h1>
+      <h1>Модель данных Kanban</h1>
     </template>
 
-    <div class="problem-page">
-      <div class="content">
-        <div class="problem">
-          <h2>🎭 Проблема</h2>
-          <p>
-            Без эффективного управления задачи превращаются в хаос, вызывая
-            стресс и конфликты. Традиционные методы недостаточно эффективны.
-          </p>
-          <p>
-            <strong>Enterprise-решения (Jira)</strong> слишком сложны и избыточны
-            для малых команд. Высокий порог входа.
-          </p>
-          <p>
-            <strong>Простые To-Do листы</strong> не поддерживают коллаборацию,
-            визуализацию процессов и управление правами доступа.
-          </p>
-        </div>
-
-        <div class="solution">
-          <h2>✨ Решение</h2>
-          <p>
-            <strong>Teamly</strong> — простая и интуитивная Kanban-доска.
-            Проверенные методики в понятной обертке.
-          </p>
-          <p>
-            <strong>Без сложности:</strong> визуализация задач, drag-and-drop,
-            совместная работа. Никаких перегруженных интерфейсов.
-          </p>
-          <p>
-            <strong>Масштабируемая архитектура</strong> на основе Nuxt Layers.
-            Готова к расширению без переписывания ядра.
-          </p>
-          <p>
-            <strong>Безопасность:</strong> ролевая модель доступа, stateful
-            sessions, строгая изоляция данных.
-          </p>
-        </div>
+    <div class="kanban-model-container">
+      <div class="description">
+        <h2>Структура данных задач</h2>
+        <p>
+          Статусы задач зафиксированы: <strong>todo</strong>,
+          <strong>in_progress</strong>, <strong>done</strong>.
+        </p>
+        <p>
+          Это решение принято для MVP, чтобы избежать сложности управления
+          динамическими колонками.
+        </p>
+        <p>
+          Поле <code>order_index</code> зарезервировано для пользовательской
+          сортировки (vNext).
+        </p>
       </div>
 
-      <div class="image">
-        <mp-image
-          src="img/family-struggle.png"
-          alt="Семейный хаос с задачами"
-          fit="contain"
-          :zoom="1.1"
+      <div class="code-container">
+        <mp-codeblock
+          :code="taskModelCode"
+          language="prisma"
+          filename="prisma/schema.prisma"
+          show-line-numbers
+          :highlight-lines="[1, 13]"
         />
       </div>
     </div>
@@ -56,60 +35,64 @@
 </template>
 
 <script setup lang="ts">
+const taskModelCode = `enum TaskStatusEnum {
+  todo
+  in_progress
+  done
+}
+
+model Task {
+  id          String          @id @default(uuid())
+  board_id    String
+  board       Board           @relation(fields: [board_id], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      TaskStatusEnum  @default(todo)
+  priority    TaskPriority    @default(medium)
+  order_index Int?
+  due_date    DateTime?
+  created_at  DateTime        @default(now())
+  updated_at  DateTime        @updatedAt
+
+  assignees   TaskAssignee[]
+}`;
+
 definePageMeta({
   layout: "default",
 });
 </script>
 
 <style scoped>
-.problem-page {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: var(--sp-xl);
+.kanban-model-container {
   height: 100%;
-  align-items: start;
-}
-
-.content {
   display: grid;
-  gap: calc(var(--sp-l) * 4);
-  max-width: 800px;
-  margin-top: auto;
-  margin-bottom: auto;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-xl);
+  align-items: center;
 }
 
-.problem,
-.solution {
+.description {
   display: grid;
   gap: var(--sp-m);
 }
 
-.problem h2 {
-  color: var(--clr-error);
+.description h2 {
   margin: 0;
+  color: var(--clr-primary);
 }
 
-.solution h2 {
-  color: var(--clr-success);
-  margin: 0;
-}
-
-.problem p,
-.solution p {
+.description p {
   margin: 0;
   line-height: 1.6;
 }
 
-.problem p strong,
-.solution p strong {
+.description code {
+  background-color: var(--clr-surface-variant);
+  padding: 0.125rem 0.375rem;
+  border-radius: var(--cr-s);
+  font-family: "Fira Code", monospace;
+  font-size: 0.9em;
   color: var(--clr-primary);
 }
-
-.image {
-  display: grid;
-  margin: 0;
-  & picture {
-    border-radius: var(--sp-l, 1rem);
-  }
-}
 </style>
+

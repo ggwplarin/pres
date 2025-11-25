@@ -1,106 +1,127 @@
 <template>
   <mp-slide>
     <template #header>
-      <h1>Разработка MVP</h1>
+      <h1>План разработки</h1>
     </template>
-    <div class="container">
-      <div class="image-container">
-        <mp-image
-          src="/img/roadmap.png"
-          alt="Roadmap"
-          fit="contain"
-          :zoom="1.91"
-        />
-      </div>
-      <div class="roadmap-container">
-        <h2>Дорожная карта</h2>
-        <mp-roadmap
-          :items="roadmapItems"
-          title-key="label"
-          subtitle-key="description"
-          date-key="date"
-          status-key="status"
-          color-key="color"
-          direction="horizontal"
-        />
-      </div>
-    </div>
+
+    <mp-gantt
+      :items="tasks"
+      start-key="start"
+      end-key="end"
+      label-key="label"
+      color-key="color"
+      variant="outlined"
+      :grid="true"
+      dense
+    />
   </mp-slide>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue";
 
-const roadmapItems = ref([
+const tasks = ref([
   {
-    label: "Проектирование",
-    description: "Анализ требований, ТЗ, схема БД",
-    date: "Ноябрь 1 - 5",
-    status: "completed",
+    label: "Анализ требований и ТЗ",
+    start: "2025-11-01",
+    end: "2025-11-02",
+    color: "secondary",
   },
   {
-    label: "Бэкенд ядро",
-    description: "Модели, Аутентификация, API задач",
-    date: "Ноябрь 6 - 10",
-    status: "completed",
+    label: "Настройка проекта и инфраструктуры",
+    start: "2025-11-02",
+    end: "2025-11-03",
+    color: "secondary",
   },
   {
-    label: "UI и Frontend",
-    description: "Компоненты, Kanban доска, Drag&Drop",
-    date: "Ноябрь 11 - 15",
-    status: "completed",
+    label: "Настройка базы данных",
+    start: "2025-11-03",
+    end: "2025-11-05",
+    color: "tertiary",
   },
   {
-    label: "Интеграция и Тесты",
-    description: "Связка API, E2E тесты, Багфикс",
-    date: "Ноябрь 16 - 20",
-    status: "completed",
+    label: "Дизаайн Kanban компонентов",
+    start: "2025-11-04",
+    end: "2025-11-07",
+    color: "secondary",
   },
   {
-    label: "Drag & Drop и интеграция",
-    description: "Реализация перетаскивания, интеграция компонентов",
-    date: "Ноябрь 12 - 16",
-    status: "pending",
+    label: "Настройка системы аутентификации",
+    start: "2025-11-05",
+    end: "2025-11-08",
+    color: "tertiary",
   },
   {
-    label: "Функции задач и фильтры",
-    description: "Расширенные возможности задач, система фильтрации",
-    date: "Ноябрь 21 - 24",
-    status: "pending",
+    label: "API для пользователей и досок",
+    start: "2025-11-08",
+    end: "2025-11-11",
+    color: "tertiary",
   },
   {
-    label: "Лендинг и мобильный дизайн",
-    description: "Создание главной страницы, мобильная адаптация",
-    date: "Ноябрь 25 - 30",
-    status: "pending",
+    label: "API для задач",
+    start: "2025-11-11",
+    end: "2025-11-14",
+    color: "tertiary",
   },
   {
-    label: "Тестирование и релиз",
-    description: "Финальное тестирование, подготовка к запуску",
-    date: "Ноябрь 30 - Декабрь 6",
-    status: "pending",
+    label: "Разработка Kanban компонентов",
+    start: "2025-11-07",
+    end: "2025-11-12",
+    color: "primary",
+  },
+  {
+    label: "Реализация Drag & Drop",
+    start: "2025-11-12",
+    end: "2025-11-15",
+    color: "primary",
+  },
+  {
+    label: "Интеграция API с фронтендом",
+    start: "2025-11-14",
+    end: "2025-11-17",
+    color: "primary",
+  },
+  {
+    label: "Тестирование функциональности",
+    start: "2025-11-17",
+    end: "2025-11-19",
+    color: "primary",
+  },
+  {
+    label: "Исправление багов",
+    start: "2025-11-19",
+    end: "2025-11-20",
+    color: "primary",
+  },
+  {
+    label: "Адаптивный дизайн",
+    start: "2025-11-15",
+    end: "2025-11-18",
+    color: "primary",
+  },
+  {
+    label: "Реализация доступности",
+    start: "2025-11-17",
+    end: "2025-11-19",
+    color: "primary",
+  },
+  {
+    label: "Подготовка релиза",
+    start: "2025-11-10",
+    end: "2025-11-15",
+    color: "secondary",
+  },
+  {
+    label: "Подготовка документации",
+    start: "2025-11-14",
+    end: "2025-11-21",
+    color: "secondary",
   },
 ]);
 </script>
 
 <style scoped>
-.container {
-  display: grid;
-  grid-template-rows: 36rem 1fr;
-  gap: var(--sp-l);
-}
-.image-container {
-  display: grid;
-  margin: 0;
-  & picture {
-    border-radius: var(--sp-l, 1rem);
+  .mp-gantt-container {
+    margin: auto;
   }
-}
-.roadmap-container {
-  display: grid;
-
-  & h2 {
-    margin: 0;
-  }
-}
 </style>

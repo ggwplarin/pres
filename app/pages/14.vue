@@ -1,61 +1,110 @@
 <template>
   <mp-slide>
     <template #header>
-      <h1>Модель данных Kanban</h1>
+      <h1>Ролевая модель доступа (RBAC)</h1>
     </template>
 
-    <div class="kanban-model-container">
+    <div class="rbac-container">
       <div class="description">
-        <h2>Структура данных задач</h2>
+        <h2>Система прав доступа</h2>
         <p>
-          Статусы задач зафиксированы: <strong>todo</strong>,
-          <strong>in_progress</strong>, <strong>done</strong>.
+          Права доступа жестко типизированы через enum BoardRole в Prisma.
+          Каждая роль имеет четко определенные возможности.
         </p>
         <p>
-          Это решение принято для MVP, чтобы избежать сложности управления
-          динамическими колонками.
-        </p>
-        <p>
-          Поле <code>order_index</code> зарезервировано для пользовательской
-          сортировки (vNext).
+          Строгая изоляция данных: пользователь видит только те доски, куда он
+          имеет доступ.
         </p>
       </div>
 
-      <div class="code-container">
-        <mp-codeblock
-          :code="taskModelCode"
-          language="prisma"
-          filename="prisma/schema.prisma"
-          show-line-numbers
-          :highlight-lines="[1, 2, 3, 4, 6, 9]"
-        />
+      <div class="table-container">
+        <mp-table
+          :items="roleItems"
+          :columns="columns"
+          variant="outlined"
+          hover
+          striped
+          dense
+          padding="m"
+          body-text-size="title"
+          header-text-size="title"
+        >
+          <template #cell-role="{ value }">
+            <strong>{{ value }}</strong>
+          </template>
+        </mp-table>
+      </div>
+
+      <div class="roles-description">
+        <mp-bento-grid :cols="3" :rows="2" gap="m">
+          <mp-bento-tile variant="outlined">
+            <template #title>
+              <h3>👑 Owner</h3>
+            </template>
+            <p>Полный доступ, удаление доски, управление приглашениями</p>
+          </mp-bento-tile>
+
+          <mp-bento-tile variant="outlined">
+            <template #title>
+              <h3>✏️ Editor</h3>
+            </template>
+            <p>Создание, редактирование контента, перемещение задач</p>
+          </mp-bento-tile>
+
+          <mp-bento-tile variant="outlined">
+            <template #title>
+              <h3>👁️ Viewer</h3>
+            </template>
+            <p>Только чтение (Read-only доступ)</p>
+          </mp-bento-tile>
+        </mp-bento-grid>
       </div>
     </div>
   </mp-slide>
 </template>
 
 <script setup lang="ts">
-const taskModelCode = `enum TaskStatusEnum {
-  todo
-  in_progress
-  done
+import type { TableColumn } from "../components/mp-table.vue";
+
+interface RoleItem {
+  role: string;
+  createTasks: string;
+  deleteTasks: string;
+  moveTasks: string;
+  boardSettings: string;
 }
 
-model Task {
-  id          String          @id @default(uuid())
-  board_id    String
-  board       Board           @relation(fields: [board_id], references: [id], onDelete: Cascade)
-  title       String
-  description String?
-  status      TaskStatusEnum  @default(todo)
-  priority    TaskPriority    @default(medium)
-  order_index Int?
-  due_date    DateTime?
-  created_at  DateTime        @default(now())
-  updated_at  DateTime        @updatedAt
+const columns: TableColumn[] = [
+  { key: "role", label: "Роль", width: "20%" },
+  { key: "createTasks", label: "Создание задач", width: "20%", align: "center" },
+  { key: "deleteTasks", label: "Удаление задач", width: "20%", align: "center" },
+  { key: "moveTasks", label: "Перемещение", width: "20%", align: "center" },
+  { key: "boardSettings", label: "Настройки доски", width: "20%", align: "center" },
+];
 
-  assignees   TaskAssignee[]
-}`;
+const roleItems: RoleItem[] = [
+  {
+    role: "Owner",
+    createTasks: "✅",
+    deleteTasks: "✅",
+    moveTasks: "✅",
+    boardSettings: "✅",
+  },
+  {
+    role: "Editor",
+    createTasks: "✅",
+    deleteTasks: "✅",
+    moveTasks: "✅",
+    boardSettings: "❌",
+  },
+  {
+    role: "Viewer",
+    createTasks: "❌",
+    deleteTasks: "❌",
+    moveTasks: "❌",
+    boardSettings: "❌",
+  },
+];
 
 definePageMeta({
   layout: "default",
@@ -63,17 +112,17 @@ definePageMeta({
 </script>
 
 <style scoped>
-.kanban-model-container {
+.rbac-container {
   height: 100%;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-xl);
-  align-items: center;
+  grid-template-rows: auto min-content 1fr;
+  gap: calc(var(--sp-xl) * 2.5);
+  align-content: start;
 }
 
 .description {
   display: grid;
-  gap: var(--sp-m);
+  gap: var(--sp-s);
 }
 
 .description h2 {
@@ -83,16 +132,24 @@ definePageMeta({
 
 .description p {
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
-.description code {
-  background-color: var(--clr-surface-variant);
-  padding: 0.125rem 0.375rem;
-  border-radius: var(--cr-s);
-  font-family: "Fira Code", monospace;
-  font-size: 0.9em;
-  color: var(--clr-primary);
+.table-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.roles-description {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.roles-description :deep(.teamly-bento-grid) {
+  flex: 1;
+  align-items: stretch;
 }
 </style>
 

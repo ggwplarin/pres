@@ -1,63 +1,106 @@
 <template>
   <mp-slide>
     <template #header>
-      <h1>Авторизация и защита маршрутов</h1>
+      <h1>Разработка MVP</h1>
     </template>
-
-    <div class="code-container">
-      <div>
-        <h2>Пример работы auth middleware</h2>
-        <p>
-          Middleware проверяет авторизацию пользователя и защищает приватные
-          маршруты.
-        </p>
-        <p>
-          Если пользователь не авторизован и пытается попасть на приватный
-          маршрут, он будет перенаправлен на страницу авторизации.
-        </p>
-        <p>
-          Если пользователь авторизован и пытается попасть на страницу
-          авторизации, он будет перенаправлен на главную страницу.
-        </p>
+    <div class="container">
+      <div class="image-container">
+        <mp-image
+          src="/img/roadmap.png"
+          alt="Roadmap"
+          fit="contain"
+          :zoom="1.91"
+        />
       </div>
-      <mp-codeblock
-        :code="authCode"
-        language="typescript"
-        filename="layers/auth/middleware/auth.global.ts"
-        show-line-numbers
-        :highlight-lines="[5, 10, 15]"
-      />
+      <div class="roadmap-container">
+        <h2>Дорожная карта</h2>
+        <mp-roadmap
+          :items="roadmapItems"
+          title-key="label"
+          subtitle-key="description"
+          date-key="date"
+          status-key="status"
+          color-key="color"
+          direction="horizontal"
+        />
+      </div>
     </div>
   </mp-slide>
 </template>
 
 <script setup lang="ts">
-const authCode = `export default defineNuxtRouteMiddleware(async (to) => {
-  const userStore = useUserStore();
+import { ref } from "vue";
 
-  // Проверка авторизации
-  if (userStore.isLoggedIn && to.path === '/login') {
-    return navigateTo('/');
-  }
-
-  // Защита приватных роутов
-  if (!userStore.isLoggedIn && to.meta.requiresAuth) {
-    return navigateTo('/login');
-  }
-
-  // Проверка прав доступа
-  if (to.meta.role && userStore.role !== to.meta.role) {
-    return navigateTo('/403');
-  }
-});`;
+const roadmapItems = ref([
+  {
+    label: "Проектирование",
+    description: "Анализ требований, ТЗ, схема БД",
+    date: "Ноябрь 1 - 5",
+    status: "completed",
+  },
+  {
+    label: "Бэкенд ядро",
+    description: "Модели, Аутентификация, API задач",
+    date: "Ноябрь 6 - 10",
+    status: "completed",
+  },
+  {
+    label: "UI и Frontend",
+    description: "Компоненты, Kanban доска, Drag&Drop",
+    date: "Ноябрь 11 - 15",
+    status: "completed",
+  },
+  {
+    label: "Интеграция и Тесты",
+    description: "Связка API, E2E тесты, Багфикс",
+    date: "Ноябрь 16 - 20",
+    status: "completed",
+  },
+  {
+    label: "Drag & Drop и интеграция",
+    description: "Реализация перетаскивания, интеграция компонентов",
+    date: "Ноябрь 12 - 16",
+    status: "pending",
+  },
+  {
+    label: "Функции задач и фильтры",
+    description: "Расширенные возможности задач, система фильтрации",
+    date: "Ноябрь 21 - 24",
+    status: "pending",
+  },
+  {
+    label: "Лендинг и мобильный дизайн",
+    description: "Создание главной страницы, мобильная адаптация",
+    date: "Ноябрь 25 - 30",
+    status: "pending",
+  },
+  {
+    label: "Тестирование и релиз",
+    description: "Финальное тестирование, подготовка к запуску",
+    date: "Ноябрь 30 - Декабрь 6",
+    status: "pending",
+  },
+]);
 </script>
 
 <style scoped>
-.code-container {
-  height: 100%;
+.container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-xl);
-  align-items: center;
+  grid-template-rows: 36rem 1fr;
+  gap: var(--sp-l);
+}
+.image-container {
+  display: grid;
+  margin: 0;
+  & picture {
+    border-radius: var(--sp-l, 1rem);
+  }
+}
+.roadmap-container {
+  display: grid;
+
+  & h2 {
+    margin: 0;
+  }
 }
 </style>

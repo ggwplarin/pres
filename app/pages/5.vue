@@ -1,127 +1,115 @@
 <template>
   <mp-slide>
     <template #header>
-      <h1>План разработки</h1>
+      <h1>Проблематика: Хаос в управлении задачами</h1>
     </template>
 
-    <mp-gantt
-      :items="tasks"
-      start-key="start"
-      end-key="end"
-      label-key="label"
-      color-key="color"
-      variant="outlined"
-      :grid="true"
-      dense
-    />
+    <div class="problem-page">
+      <div class="content">
+        <div class="problem">
+          <h2>🎭 Проблема</h2>
+          <p>
+            Без эффективного управления задачи превращаются в хаос, вызывая
+            стресс и конфликты. Традиционные методы недостаточно эффективны.
+          </p>
+          <p>
+            <strong>Enterprise-решения (Jira)</strong> слишком сложны и избыточны
+            для малых команд. Высокий порог входа.
+          </p>
+          <p>
+            <strong>Простые To-Do листы</strong> не поддерживают коллаборацию,
+            визуализацию процессов и управление правами доступа.
+          </p>
+        </div>
+
+        <div class="solution">
+          <h2>✨ Решение</h2>
+          <p>
+            <strong>Teamly</strong> — простая и интуитивная Kanban-доска.
+            Проверенные методики в понятной обертке.
+          </p>
+          <p>
+            <strong>Без сложности:</strong> визуализация задач, drag-and-drop,
+            совместная работа. Никаких перегруженных интерфейсов.
+          </p>
+          <p>
+            <strong>Масштабируемая архитектура</strong> на основе Nuxt Layers.
+            Готова к расширению без переписывания ядра.
+          </p>
+          <p>
+            <strong>Безопасность:</strong> ролевая модель доступа, stateful
+            sessions, строгая изоляция данных.
+          </p>
+        </div>
+      </div>
+
+      <div class="image">
+        <mp-image
+          src="img/family-struggle.png"
+          alt="Семейный хаос с задачами"
+          fit="contain"
+          :zoom="1.1"
+        />
+      </div>
+    </div>
   </mp-slide>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
-const tasks = ref([
-  {
-    label: "Анализ требований и ТЗ",
-    start: "2025-11-01",
-    end: "2025-11-02",
-    color: "secondary",
-  },
-  {
-    label: "Настройка проекта и инфраструктуры",
-    start: "2025-11-02",
-    end: "2025-11-03",
-    color: "secondary",
-  },
-  {
-    label: "Настройка базы данных",
-    start: "2025-11-03",
-    end: "2025-11-05",
-    color: "tertiary",
-  },
-  {
-    label: "Дизаайн Kanban компонентов",
-    start: "2025-11-04",
-    end: "2025-11-07",
-    color: "secondary",
-  },
-  {
-    label: "Настройка системы аутентификации",
-    start: "2025-11-05",
-    end: "2025-11-08",
-    color: "tertiary",
-  },
-  {
-    label: "API для пользователей и досок",
-    start: "2025-11-08",
-    end: "2025-11-11",
-    color: "tertiary",
-  },
-  {
-    label: "API для задач",
-    start: "2025-11-11",
-    end: "2025-11-14",
-    color: "tertiary",
-  },
-  {
-    label: "Разработка Kanban компонентов",
-    start: "2025-11-07",
-    end: "2025-11-12",
-    color: "primary",
-  },
-  {
-    label: "Реализация Drag & Drop",
-    start: "2025-11-12",
-    end: "2025-11-15",
-    color: "primary",
-  },
-  {
-    label: "Интеграция API с фронтендом",
-    start: "2025-11-14",
-    end: "2025-11-17",
-    color: "primary",
-  },
-  {
-    label: "Тестирование функциональности",
-    start: "2025-11-17",
-    end: "2025-11-19",
-    color: "primary",
-  },
-  {
-    label: "Исправление багов",
-    start: "2025-11-19",
-    end: "2025-11-20",
-    color: "primary",
-  },
-  {
-    label: "Адаптивный дизайн",
-    start: "2025-11-15",
-    end: "2025-11-18",
-    color: "primary",
-  },
-  {
-    label: "Реализация доступности",
-    start: "2025-11-17",
-    end: "2025-11-19",
-    color: "primary",
-  },
-  {
-    label: "Подготовка релиза",
-    start: "2025-11-10",
-    end: "2025-11-15",
-    color: "secondary",
-  },
-  {
-    label: "Подготовка документации",
-    start: "2025-11-14",
-    end: "2025-11-21",
-    color: "secondary",
-  },
-]);
+definePageMeta({
+  layout: "default",
+});
 </script>
 
 <style scoped>
-  .mp-gantt-container {
-    margin: auto;
+.problem-page {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: var(--sp-xl);
+  height: 100%;
+  align-items: start;
+}
+
+.content {
+  display: grid;
+  gap: calc(var(--sp-l) * 4);
+  max-width: 800px;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.problem,
+.solution {
+  display: grid;
+  gap: var(--sp-m);
+}
+
+.problem h2 {
+  color: var(--clr-error);
+  margin: 0;
+}
+
+.solution h2 {
+  color: var(--clr-success);
+  margin: 0;
+}
+
+.problem p,
+.solution p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+.problem p strong,
+.solution p strong {
+  color: var(--clr-primary);
+}
+
+.image {
+  display: grid;
+  margin: 0;
+  & picture {
+    border-radius: var(--sp-l, 1rem);
   }
+}
 </style>
